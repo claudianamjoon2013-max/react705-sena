@@ -1,0 +1,127 @@
+.escenario {
+  width: 700px;
+  height: 480px;
+  margin: 30px auto;
+  border-radius: 16px;
+  overflow: hidden;
+  text-align: center;
+  position: relative;
+  background: #030712;
+  border: 2px solid rgba(0, 240, 255, 0.4);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.25), 
+              0 10px 25px rgba(0, 0, 0, 0.8);
+}
+
+.escenario::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 48%;
+  background: radial-gradient(circle at 30% 30%, #2e1065 0%, #0d072b 70%, #030712 100%);
+  z-index: 0;
+}
+
+.escenario::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 52%;
+  background: linear-gradient(180deg, #180033 0%, #090014 100%);
+  border-top: 2px solid rgba(168, 85, 247, 0.7); 
+  z-index: 0;
+}
+
+.luna {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  font-size: 38px;
+  z-index: 1;
+  filter: drop-shadow(0 0 12px #a855f7) drop-shadow(0 0 20px #00f0ff);
+  transform: rotate(-15deg);
+}
+
+.estrella {
+  position: absolute;
+  color: #e0f2fe;
+  z-index: 1;
+  font-size: 12px;
+  text-shadow: 0 0 8px #00f0ff;
+  animation: parpadeo 1.8s infinite ease-in-out;
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.rayo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 48%;
+  background: linear-gradient(120deg, transparent 35%, rgba(0, 240, 255, 0.2) 50%, transparent 65%);
+  z-index: 1;
+  animation: destello 3s infinite;
+}
+
+@keyframes destello {
+  0%, 85%, 100% { opacity: 0; }
+  90%, 94% { opacity: 1; }
+}
+
+.panel-inferior {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  z-index: 6;
+}
+
+.contenedor-botones {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+button {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid #00f0ff;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 16px;
+  cursor: pointer;
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  background: #00f0ff;
+  box-shadow: 0 0 15px #00f0ff;
+  transform: scale(1.05);
+}
+
+h3 {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color: #e0e7ff;
+  font-size: 14px;
+  text-shadow: 0 0 8px #a855f7;
+  margin: 0;
+}
+
+.record-texto {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color: #00f0ff;
+  font-size: 13px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin: 4px 0 0 0;
+  text-shadow: 0 0 6px #00f0ff;
+}

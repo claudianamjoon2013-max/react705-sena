@@ -1,0 +1,81 @@
+.contacto-contenedor {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+}
+
+.contacto-formulario {
+  background-color: rgba(3, 7, 18, 0.85);
+  border: 2px solid rgba(0, 240, 255, 0.5);
+  border-radius: 10px;
+  padding: 25px;
+  width: 100%;
+  max-width: 700px;
+  color: white;
+}
+
+.contacto-formulario h2 {
+  text-align: center;
+  color: #00f0ff;
+  margin-bottom: 20px;
+}
+
+.fila {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-bottom: 15px;
+}
+
+.campo label {
+  color: #00f0ff;
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  font-size: 14px;
+}
+
+.campo input:focus,
+.campo select:focus,
+.campo textarea:focus {
+  border-color: #00f0ff;
+  outline: none;
+}
+
+/* Opciones del selector visible en color claro sobre fondo oscuro */
+.campo select option {
+  background-color: #0f172a;
+  color: #ffffff;
+}
+
+.boton-enviar {
+  background-color: transparent;
+  border: 2px solid #00f0ff;
+  color: #00f0ff;
+  padding: 12px;
+  width: 100%;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.boton-enviar:hover {
+  background-color: #00f0ff;
+  color: #000;
+}
