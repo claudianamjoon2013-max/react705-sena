@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Sun, Moon, ShoppingCart, Trash2, Rocket, User, LogOut, Send, CheckCircle } from "lucide-react";
+import { Sun, Moon, ShoppingCart, Trash2, Rocket, User, LogOut, Send, CheckCircle, Mail, Shield, Award, X } from "lucide-react";
 import Swal from "sweetalert2";
 import { useTheme } from "../../context/ThemeContext";
 import { useCart } from "../../context/CartContext";
@@ -10,7 +10,7 @@ import "./Header.css";
 
 function Header() {
   const [mostrarLogin, setMostrarLogin] = useState(false);
-  const [mostrarPerfil, setMostrarPerfil] = useState(false); 
+  const [mostrarPerfilAmpliado, setMostrarPerfilAmpliado] = useState(false); 
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
   const [mensajeEnvio, setMensajeEnvio] = useState(null);
 
@@ -33,15 +33,11 @@ function Header() {
   const { user, login, logout } = useAuth();
 
   const dropdownCarritoRef = useRef(null);
-  const dropdownPerfilRef = useRef(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownCarritoRef.current && !dropdownCarritoRef.current.contains(event.target)) {
         setMostrarCarrito(false);
-      }
-      if (dropdownPerfilRef.current && !dropdownPerfilRef.current.contains(event.target)) {
-        setMostrarPerfil(false);
       }
     }
     document.addEventListener("mousedown", handleClickOutside);
@@ -100,7 +96,7 @@ function Header() {
     }).then((result) => {
       if (result.isConfirmed) {
         logout();
-        setMostrarPerfil(false);
+        setMostrarPerfilAmpliado(false);
         Swal.fire({
           title: '¡Sesión cerrada!',
           text: 'Has salido del sistema con éxito.',
@@ -285,36 +281,19 @@ function Header() {
             {tema === "claro" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
 
-          {/* Login / Perfil */}
+          {/* Login / Perfil (Abre directamente el perfil ampliado grande) */}
           {user ? (
-            <div className="relative" ref={dropdownPerfilRef}>
+            <div className="relative">
               <button
                 type="button"
-                onClick={() => setMostrarPerfil(!mostrarPerfil)}
+                onClick={() => setMostrarPerfilAmpliado(true)}
                 className="flex items-center gap-2 p-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-colors cursor-pointer"
-                title="Perfil de usuario"
+                title="Ver perfil completo de tripulante"
               >
                 <div className="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-bold flex items-center justify-center text-xs">
                   {user.name ? obtenerIniciales(user.name) : <User size={16} />}
                 </div>
               </button>
-
-              {mostrarPerfil && (
-                <div className="absolute right-0 mt-2 w-64 bg-slate-900/95 backdrop-blur-md border border-cyan-500/30 rounded-xl shadow-2xl p-4 z-50 text-slate-100">
-                  <div className="pb-3 border-b border-slate-800">
-                    <p className="text-xs text-slate-400">Usuario conectado:</p>
-                    <p className="font-bold text-sm text-cyan-400 truncate">{user.name}</p>
-                    <p className="text-xs text-slate-300 mt-1">{user.rol}</p>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={handleCerrarSesion}
-                    className="w-full mt-3 flex items-center justify-center gap-2 bg-rose-500/20 hover:bg-rose-500 text-rose-400 hover:text-white font-semibold py-2 rounded-lg text-xs transition-colors cursor-pointer"
-                  >
-                    <LogOut size={14} /> Cerrar Sesión
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
             <button className="header-login" onClick={() => setMostrarLogin(true)}>
@@ -377,6 +356,61 @@ function Header() {
                 Iniciar Sesión
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Perfil Ampliado (Grande y profesional) */}
+      {mostrarPerfilAmpliado && user && (
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
+          <div className="bg-slate-900 border border-cyan-500/40 w-full max-w-md rounded-3xl shadow-2xl p-6 text-slate-100 relative overflow-hidden">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl"></div>
+
+            <button 
+              onClick={() => setMostrarPerfilAmpliado(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-800 transition-colors cursor-pointer"
+            >
+              <X size={20} />
+            </button>
+
+            <div className="flex flex-col items-center text-center pb-6 border-b border-slate-800">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-cyan-500 to-sky-400 text-slate-950 font-black text-2xl flex items-center justify-center shadow-lg shadow-cyan-500/30 mb-3 border-2 border-slate-900">
+                {user.name ? obtenerIniciales(user.name) : <User size={32} />}
+              </div>
+              <h2 className="text-xl font-bold text-cyan-400">{user.name}</h2>
+              <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1">
+                <Shield size={14} className="text-cyan-400" /> {user.rol || "Tripulante / Aprendiz ADSO"}
+              </p>
+            </div>
+
+            <div className="py-4 space-y-3 text-sm">
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                <Mail size={18} className="text-cyan-400" />
+                <div>
+                  <p className="text-xs text-slate-400">Correo institucional</p>
+                  <p className="font-medium text-slate-200">{user.email}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-950/60 border border-slate-800">
+                <Award size={18} className="text-cyan-400" />
+                <div>
+                  <p className="text-xs text-slate-400">Estado del Tripulante</p>
+                  <p className="font-medium text-emerald-400">● Activo en Misión SENA</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={handleCerrarSesion}
+                className="w-full flex items-center justify-center gap-2 bg-rose-500/20 hover:bg-rose-500 text-rose-400 hover:text-white font-semibold py-2.5 rounded-xl text-xs transition-colors cursor-pointer border border-rose-500/30 shadow-md"
+              >
+                <LogOut size={16} /> Cerrar Sesión de la Base
+              </button>
+            </div>
+
           </div>
         </div>
       )}
