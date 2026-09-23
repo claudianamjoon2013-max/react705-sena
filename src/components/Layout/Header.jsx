@@ -47,6 +47,16 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Función para extraer correctamente las iniciales del nombre (Ej: "Claudia Patricia" -> "CP")
+  const obtenerIniciales = (nombreCompleto) => {
+    if (!nombreCompleto) return "U";
+    const palabras = nombreCompleto.trim().split(" ");
+    if (palabras.length >= 2) {
+      return (palabras[0][0] + palabras[1][0]).toUpperCase();
+    }
+    return palabras[0][0].toUpperCase();
+  };
+
   const handleLoginSubmit = (e) => {
     e.preventDefault();
     if (!usuarioInput.trim() || !passwordInput.trim()) {
@@ -232,7 +242,7 @@ function Header() {
                 title="Perfil de usuario"
               >
                 <div className="w-8 h-8 rounded-full bg-cyan-500 text-slate-950 font-bold flex items-center justify-center text-xs">
-                  {user.name ? user.name.charAt(0).toUpperCase() : <User size={16} />}
+                  {user.name ? obtenerIniciales(user.name) : <User size={16} />}
                 </div>
               </button>
 
