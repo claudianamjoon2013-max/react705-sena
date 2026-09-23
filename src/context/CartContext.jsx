@@ -25,7 +25,7 @@ export function CartProvider({ children }) {
     });
   };
 
-  // Eliminar un producto específico del carrito (¡Requerido por la guía!)
+  // Eliminar un producto específico del carrito 
   const eliminarDelCarrito = (id) => {
     setCarrito((prevCarrito) => prevCarrito.filter((item) => item.id !== id));
   };
@@ -36,10 +36,15 @@ export function CartProvider({ children }) {
     localStorage.removeItem("carrito_sena");
   };
 
-  // Cálculos de Totales, IVA (19%) y Subtotales (Punto 5.c)
-  const subtotalGeneral = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
-  const iva = subtotalGeneral * 0.19;
-  const totalAPagar = subtotalGeneral + iva;
+  // Cálculos cuando el precio del producto YA TRAE EL IVA INCLUIDO
+  const totalAPagar = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+  
+  // El subtotal real se obtiene dividiendo el total entre 1.19
+  const subtotalGeneral = totalAPagar / 1.19;
+  
+  // El IVA es la diferencia entre lo que paga el cliente y el subtotal sin IVA
+  const iva = totalAPagar - subtotalGeneral;
+  
   const totalItems = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
   return (
