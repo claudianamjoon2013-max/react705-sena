@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Sun, Moon, ShoppingCart, Trash2, Rocket, User, LogOut, Send, CheckCircle } from "lucide-react";
+import Swal from "sweetalert2";
 import { useTheme } from "../../context/ThemeContext";
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext"; 
@@ -47,7 +48,6 @@ function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Función para extraer correctamente las iniciales del nombre (Ej: "Claudia Patricia" -> "CP")
   const obtenerIniciales = (nombreCompleto) => {
     if (!nombreCompleto) return "U";
     const palabras = nombreCompleto.trim().split(" ");
@@ -74,31 +74,84 @@ function Header() {
     setUsuarioInput("");
     setPasswordInput("");
     setErrorLogin("");
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Bienvenida a bordo!',
+      text: `Sesión iniciada correctamente, ${usuarioInput}.`,
+      background: '#0f172a',
+      color: '#f8fafc',
+      confirmButtonColor: '#06b6d4'
+    });
   };
 
   const handleCerrarSesion = () => {
-    const confirmar = window.confirm("¿Estás seguro de que deseas cerrar sesión de tu cuenta?");
-    if (confirmar) {
-      logout();
-      setMostrarPerfil(false);
-    }
+    Swal.fire({
+      title: '¿Deseas cerrar sesión?',
+      text: "Tendrás que ingresar nuevamente con tus credenciales de tripulante.",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#06b6d4',
+      cancelButtonColor: '#f43f5e',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar',
+      background: '#0f172a',
+      color: '#f8fafc'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout();
+        setMostrarPerfil(false);
+        Swal.fire({
+          title: '¡Sesión cerrada!',
+          text: 'Has salido del sistema con éxito.',
+          icon: 'success',
+          timer: 1500,
+          showConfirmButton: false,
+          background: '#0f172a',
+          color: '#f8fafc'
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+    });
   };
 
   const handleEnviarPedido = () => {
     if (carrito.length === 0) return;
 
-    const confirmar = window.confirm("¿Estás seguro de que deseas enviar este pedido intergaláctico?");
-    
-    if (confirmar) {
-      setMensajeEnvio({ tipo: "exito", texto: "¡Pedido enviado con éxito a la base espacial! 🚀" });
-      
-      setTimeout(() => {
-        vaciarCarrito();
-        localStorage.removeItem("carrito_sena"); 
-        setMensajeEnvio(null);
-        setMostrarCarrito(false);
-      }, 2000);
-    }
+    Swal.fire({
+      title: '¿Enviar pedido intergaláctico?',
+      text: "Tus productos serán despachados a la base espacial.",
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#06b6d4',
+      cancelButtonColor: '#f43f5e',
+      confirmButtonText: 'Sí, enviar pedido',
+      cancelButtonText: 'Revisar',
+      background: '#0f172a',
+      color: '#f8fafc'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setMensajeEnvio({ tipo: "exito", texto: "¡Pedido enviado con éxito a la base espacial! 🚀" });
+        
+        Swal.fire({
+          title: '¡Enviado con éxito!',
+          text: 'Tu pedido espacial ha sido registrado correctamente.',
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+          background: '#0f172a',
+          color: '#f8fafc'
+        });
+
+        setTimeout(() => {
+          vaciarCarrito();
+          localStorage.removeItem("carrito_sena"); 
+          setMensajeEnvio(null);
+          setMostrarCarrito(false);
+        }, 2000);
+      }
+    });
   };
 
   const subtotalCalculado = subtotalGeneral || carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
